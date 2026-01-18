@@ -1,0 +1,163 @@
+# Code Quality Review 配置示例
+# 复制此文件为 .kiro/quality-review.yml 并根据项目需求调整
+
+quality-review:
+  enabled: true
+  
+  # 检测范围配置
+  scope:
+    include:
+      - src/**/*.ts
+      - src/**/*.js
+      - src/**/*.py
+      - src/**/*.java
+    exclude:
+      - "**/*.test.ts"
+      - "**/*.spec.js"
+      - "**/*.test.py"
+      - node_modules/**
+      - dist/**
+      - build/**
+  
+  # 评分权重配置
+  weights:
+    maintainability: 0.20    # 可维护性
+    reliability: 0.25        # 可靠性
+    security: 0.25           # 安全性
+    performance: 0.15        # 性能
+    testability: 0.10        # 可测试性
+    documentation: 0.05      # 文档
+  
+  # 质量阈值配置
+  thresholds:
+    # 可维护性阈值
+    complexity_max: 10              # 圈复杂度最大值
+    duplication_max: 5              # 代码重复率最大值 (%)
+    function_length_max: 50         # 函数最大行数
+    class_size_max: 500             # 类最大行数
+    
+    # 可靠性阈值
+    error_handling_min: 80          # 错误处理覆盖率最小值 (%)
+    null_check_coverage_min: 85     # 空值检查覆盖率最小值 (%)
+    
+    # 安全性阈值
+    security_score_min: 90          # 安全评分最小值
+    vulnerability_max: 0            # 允许的最大漏洞数
+    
+    # 性能阈值
+    algorithm_complexity_max: 3     # 算法复杂度最大值
+    
+    # 可测试性阈值
+    unit_test_coverage_min: 80      # 单元测试覆盖率最小值 (%)
+    integration_test_coverage_min: 60  # 集成测试覆盖率最小值 (%)
+    
+    # 文档阈值
+    api_doc_coverage_min: 90        # API文档覆盖率最小值 (%)
+    comment_ratio_min: 20           # 注释比例最小值 (%)
+  
+  # 报告配置
+  reporting:
+    format: html                    # 报告格式: html, json, markdown
+    output_dir: ./quality-reports   # 报告输出目录
+    include_trends: true            # 是否包含趋势分析
+    baseline_branch: main           # 基线分支
+    compare_with_baseline: true     # 是否与基线对比
+    
+    # 文件名配置
+    filename:
+      pattern: "quality-report-{timestamp}.{format}"  # 文件名模式
+      # 可用变量:
+      # {timestamp} - 时间戳 (YYYY-MM-DD_HH-mm-ss)
+      # {date} - 日期 (YYYY-MM-DD)
+      # {time} - 时间 (HH-mm-ss)
+      # {format} - 报告格式 (html/json/markdown)
+      # {branch} - 分支名称
+      # {project} - 项目名称
+      use_timestamp: true           # 是否自动添加时间戳
+      timestamp_format: "YYYY-MM-DD_HH-mm-ss"  # 时间戳格式
+    
+    # 报告内容
+    sections:
+      - overview                    # 质量概览
+      - dimensions                  # 维度分析
+      - issues                      # 问题列表
+      - improvement_plan            # 改进计划
+      - trends                      # 趋势分析
+      - recommendations             # 建议
+  
+  # 工具集成配置
+  tools:
+    # 静态分析工具
+    eslint:
+      enabled: true
+      config: .eslintrc.json
+    
+    pylint:
+      enabled: true
+      config: .pylintrc
+    
+    checkstyle:
+      enabled: true
+      config: checkstyle.xml
+    
+    # 代码覆盖率工具
+    jest:
+      enabled: true
+      coverage_threshold: 80
+    
+    pytest:
+      enabled: true
+      coverage_threshold: 80
+    
+    # 质量平台
+    sonarqube:
+      enabled: false
+      host: http://localhost:9000
+      project_key: my-project
+    
+    # 依赖扫描
+    snyk:
+      enabled: true
+      severity_threshold: high
+    
+    dependabot:
+      enabled: true
+  
+  # 问题分类配置
+  issue_categories:
+    - complexity
+    - duplication
+    - coverage
+    - error_handling
+    - security
+    - performance
+    - documentation
+    - best_practices
+  
+  # 改进计划配置
+  improvement_plan:
+    max_items: 20                   # 最多显示改进项数
+    include_effort_estimation: true # 是否包含工作量估算
+    include_resource_needs: true    # 是否包含资源需求
+    include_acceptance_criteria: true  # 是否包含验收标准
+  
+  # 通知配置
+  notifications:
+    enabled: true
+    on_critical_issues: true        # 发现Critical问题时通知
+    on_score_drop: true             # 评分下降时通知
+    channels:
+      - email
+      - slack
+      - github
+  
+  # 缓存配置
+  cache:
+    enabled: true
+    ttl: 3600                       # 缓存时间 (秒)
+    directory: .kiro/cache/quality-review
+  
+  # 日志配置
+  logging:
+    level: info                     # 日志级别: debug, info, warn, error
+    file: .kiro/logs/quality-review.log
